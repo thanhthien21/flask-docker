@@ -1,11 +1,10 @@
 pipeline {
 
-  agent none
+ agent none
 
   environment {
     DOCKER_IMAGE = "nhtua/flask-docker"
   }
-
   stages {
     stage("Test") {
       agent {
@@ -20,7 +19,6 @@ pipeline {
         sh "poetry run pytest"
       }
     }
-
     stage("build") {
       agent { node {label 'master'}}
       environment {
@@ -35,14 +33,12 @@ pipeline {
             sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
             sh "docker push ${DOCKER_IMAGE}:latest"
         }
-
         //clean to save disk
         sh "docker image rm ${DOCKER_IMAGE}:${DOCKER_TAG}"
         sh "docker image rm ${DOCKER_IMAGE}:latest"
       }
     }
   }
-
   post {
     success {
       echo "SUCCESSFUL"
